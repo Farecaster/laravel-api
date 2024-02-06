@@ -30,19 +30,26 @@ class TeacherController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $data = Teacher::create($request->all());
-        return new TeacherResource($data);
+    {  
+        return new TeacherResource(Teacher::create($request->all()));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Student $student)
+    public function show($id)
     {
-        //
-    }
+        // Fetch the teacher with the given ID from the database
+        $teacher = Teacher::find($id);
 
+        // Check if the teacher exists
+        if (!$teacher) {
+            return response()->json(['message' => 'Teacher not found'], 404);
+        }
+
+        // Return the teacher data
+        return new TeacherResource($teacher);
+    }
     /**
      * Show the form for editing the specified resource.
      */
@@ -54,18 +61,18 @@ class TeacherController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Student $student)
+    public function update(Request $request, Teacher $teacher)
     {
-        $student->update($request->all());
-        return new TeacherResource($student);
+        $teacher->update($request->all());
+        return new TeacherResource($teacher);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Student $student)
+    public function destroy(Teacher $teacher)
     {
-        $student->delete();
+        $teacher->delete();
         return response(null, 204);
     }
 }
